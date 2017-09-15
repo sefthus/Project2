@@ -6,12 +6,14 @@ using namespace std;
 
 
 int main(){
-    int n = 5;
+    int n = 100;
+    double omega_r=0.25;
     bool eigtest = false;
+    bool coloumb = true;
     mat A=zeros<mat>(n,n);
     mat R; R.eye(n,n);
 
-    Jacobi_method(A,R,n,eigtest);
+    Jacobi_method(A,R,omega_r,n,eigtest,coloumb);
     //testEig();
     //testOffdiag();
 }

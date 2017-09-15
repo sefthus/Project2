@@ -1,20 +1,20 @@
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 #include "armadillo"
 
 using namespace arma;
 using namespace std;
 
-void makeAmatrix(mat &A,double rho_min, double rho_max, int n)
+void makeAmatrix(mat &A,double rho_min, double rho_max, double omega_r,int n,int coloumb)
 {
     //setting up empty A matrix
     //mat A = zeros<mat>(n,n);
 
     //Potential and varible rho
-    //vec V(n);
-    double V;
+    vec V(n);
+    //double V;
     double rho;
-
     //step size
     double h=(rho_max-rho_min)/(n+1);
 
@@ -25,30 +25,35 @@ void makeAmatrix(mat &A,double rho_min, double rho_max, int n)
 
     for (int i=0;i<n;i++){
         rho = (i+1)*h;
-        V = rho*rho;
+        if (coloumb==1){
+            V(i)= omega_r*omega_r*rho*rho + 1./rho;}
+        else{
+            V(i) = rho*rho;}
 
-        //setting diagonal elements
+
+
+
+       /* //setting diagonal elements
         A(i,i)=d+V;
         // setting off diagonal elements
         if(i<n-1){
             A(i,i+1)= A(i+1,i)=e;
-        }
+        }*/
     }
     //no if test here
-   /*A(0,0)= d + V(0);
+   A(0,0)= d + V(0);
     A(0,1) = e;
     for (int i=1;i<n-1;i++){
         A(i,i-1) = A(i,i+1) =e;
         A(i,i) = d+V(i);
     }
     A(n-1,n-2)=e;
-    A(n-1,n-1)= d + V(n-1);*/
-    cout<<"matrix A"<<A<<endl;
+    A(n-1,n-1)= d + V(n-1);
     //return A;
 }
 // the off diagonal elements, offdiag from Armadillo
 double offdiag(mat &A, int &k, int &l, int n){
-    double max;
+    double max=0;
     for (int i=0; i<n;i++){
         for (int j = i+1; j<n;j++){
             double aij = fabs(A(i,j));
@@ -108,28 +113,30 @@ void Jacobi_rotate( mat &A, mat &R, int &k, int &l, int n){
     }
     //cout<<"AAAAAA: "<<A<<endl;
 }
-void output(double rho_min , double rho_max, int n, vec& d)
+void output(double rho_min , double rho_max, double omega_r, mat &R, int n, vec &lambda,int ground_state)
 {
-    int i;
-    cout << "RESULTS:" << endl;
-    cout << setiosflags(ios::showpoint | ios::uppercase);
-    cout <<"rho_min = " << setw(15) << setprecision(8) << rho_min << endl;
-    cout <<"rho_max = " << setw(15) << setprecision(8) << rho_max << endl;
-    cout <<"Number of steps = " << setw(15) << n << endl;
-    cout << "Five lowest eigenvalues:" << endl;
-
-    for(i = 0; i < 3; i++) {
-        cout << setw(15) << setprecision(8) << d[i] << endl;
+    ofstream ofile;
+    ofile.open("schrodinger_sol_omega_25.txt");
+    ofile <<"omega_r" << setw(15) << setprecision(8) << omega_r << endl;
+    ofile<<"rho_min = " << setw(15) << setprecision(8) << rho_min << endl;
+    ofile <<"rho_max = " << setw(15) << setprecision(8) << rho_max << endl;
+    ofile <<"Number of steps = " << setw(15) << n << endl;
+    ofile <<"ground state energy ="<<setw(15) << lambda[0] << endl;
+    ofile <<"Eigenvector corresponding to lowest eigenvalue:"<<endl;
+    for (int i=0;i<n;i++){
+        ofile << R(i,ground_state)<<endl;
     }
+    ofile<<endl;
+    ofile.close();
 }
 
-void Jacobi_method(mat &A,mat &R,int n,int eigtest){
+void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb){
 
     double rho_min = 0.;
-    double rho_max = 8.;
+    double rho_max = 20.;
     // make A matrix
     if (eigtest==false){
-        makeAmatrix(A,rho_min,rho_max,n);
+        makeAmatrix(A,rho_min,rho_max,omega_r,n,coloumb);
     }
     // tolerance
     double eps = 1e-8;
@@ -141,14 +148,12 @@ void Jacobi_method(mat &A,mat &R,int n,int eigtest){
     int counter=0;
     int maxcount=n*n*n;
 
+    vec eigval(n);
+    eig_sym(eigval,A);
+
     while (max_offdiag>eps && counter<=maxcount){
         Jacobi_rotate(A,R,k,l,n);
         max_offdiag=offdiag(A,k,l,n);
-        if (counter<17){
-            cout<<A<<endl;
-            cout<<"BB:  "<<max_offdiag<<" k,l "<<k<<l<<endl;
-        }
-
         counter++;
 
     }
@@ -158,9 +163,11 @@ void Jacobi_method(mat &A,mat &R,int n,int eigtest){
     cout<<maxcount<<endl;
     // vector of eigenvalues, sorted
     vec lambda = A.diag();
+    int ground_state= lambda.index_min();
     lambda=sort(lambda);
-
-    output(rho_min,rho_max,n,lambda);
+    eigval =sort(eigval);
+    cout<<"known eigenvalues: "<<eigval<<endl;
+    output(rho_min,rho_max,omega_r,R,n,lambda,ground_state);
 
 
 }
@@ -170,6 +177,8 @@ void Jacobi_method(mat &A,mat &R,int n,int eigtest){
 void testEig(){
     cout<<"Test of Jacobi mathod"<<endl;
     int n=3;
+    double omega_r=0;
+    bool coloumb=false;
     mat A;
     mat R; R.eye(n,n);
     bool eigtest = true;
@@ -181,7 +190,7 @@ void testEig(){
     eig_sym(eigval,A);
     cout <<"Matrix A = "<<A<<endl;
     cout <<"Known eigenvalues: "<< eigval<<endl;
-    Jacobi_method(A,R,n,eigtest);
+    Jacobi_method(A,R,omega_r, n,eigtest,coloumb);
 }
 
 void testOffdiag(){
