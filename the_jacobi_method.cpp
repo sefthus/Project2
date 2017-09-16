@@ -117,11 +117,15 @@ void output(double rho_min , double rho_max, double omega_r, mat &R, int n, vec 
 {
     ofstream ofile;
     ofile.open("schrodinger_sol_omega_25.txt");
-    ofile <<"omega_r" << setw(15) << setprecision(8) << omega_r << endl;
+    ofile<<setw(15)<<" omega_r" <<setw(15)<<" rho_min "<<setw(15)<<" rho_max "<<setw(20)
+        <<" Number of steps "<<setw(15)<<" ground state energy "<<endl;
+    ofile<<setw(15) << setprecision(8) << omega_r <<setw(10) << setprecision(8)
+        << rho_min<< setw(15) << setprecision(8) << rho_max << setw(15) << n <<setw(25) << lambda[0] <<endl;
+    /*ofile <<"omega_r" << setw(15) << setprecision(8) << omega_r << endl;
     ofile<<"rho_min = " << setw(15) << setprecision(8) << rho_min << endl;
     ofile <<"rho_max = " << setw(15) << setprecision(8) << rho_max << endl;
     ofile <<"Number of steps = " << setw(15) << n << endl;
-    ofile <<"ground state energy ="<<setw(15) << lambda[0] << endl;
+    ofile <<"ground state energy ="<<setw(15) << lambda[0] << endl;*/
     ofile <<"Eigenvector corresponding to lowest eigenvalue:"<<endl;
     for (int i=0;i<n;i++){
         ofile << R(i,ground_state)<<endl;
