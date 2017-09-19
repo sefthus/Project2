@@ -2,6 +2,9 @@
 #include <iomanip>
 #include <cmath>
 #include "armadillo"
+#include "time.h"
+#include <chrono>
+#include <fstream>
 
 using namespace arma;
 using namespace std;
@@ -152,8 +155,18 @@ void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb)
     int counter=0;
     int maxcount=n*n*n;
 
+    clock_t start1, finish1;
+    start1 = clock();
+
     vec eigval(n);
     eig_sym(eigval,A);
+
+    finish1=clock();
+    double timeused1 = (double)(finish1-start1)/(CLOCKS_PER_SEC);
+    cout <<"time used to run armadillo eigval: "<<timeused1<<endl;
+
+    clock_t start2, finish2;
+    start2 = clock();
 
     while (max_offdiag>eps && counter<=maxcount){
         Jacobi_rotate(A,R,k,l,n);
@@ -161,8 +174,13 @@ void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb)
         counter++;
 
     }
+
+    finish2=clock();
+    double timeused2 = (double)(finish2-start2)/(CLOCKS_PER_SEC);
+    cout <<"time used to run Jacobi: "<<timeused2<<endl;
+
     cout <<"max off diag "<<max_offdiag<<endl;
-    cout<<"A matrix: "<<A<<endl;
+    //cout<<"A matrix: "<<A<<endl;
     cout <<"Number of similarity transformations needed:"<<counter<<endl;
     cout<<maxcount<<endl;
     // vector of eigenvalues, sorted
@@ -170,7 +188,15 @@ void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb)
     int ground_state= lambda.index_min();
     lambda=sort(lambda);
     eigval =sort(eigval);
-    cout<<"known eigenvalues: "<<eigval<<endl;
+    cout<<"Three lowest known eigenvalues: "<<endl;
+    cout<<eigval[0]<<endl;
+    cout<<eigval[1]<<endl;
+    cout<<eigval[2]<<endl;
+    cout<<"Three lowest eigenvalues from Jacobi: "<<endl;
+    cout<<lambda[0]<<endl;
+    cout<<lambda[1]<<endl;
+    cout<<lambda[2]<<endl;
+
     output(rho_min,rho_max,omega_r,R,n,lambda,ground_state);
 
 

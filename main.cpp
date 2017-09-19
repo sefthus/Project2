@@ -9,7 +9,7 @@ int main(){
     int n = 100;
     double omega_r=0.25;
     bool eigtest = false;
-    bool coloumb = true;
+    bool coloumb = false;
     mat A=zeros<mat>(n,n);
     mat R; R.eye(n,n);
 
