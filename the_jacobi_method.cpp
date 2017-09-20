@@ -140,7 +140,7 @@ void output(double rho_min , double rho_max, double omega_r, mat &R, int n, vec 
 void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb){
 
     double rho_min = 0.;
-    double rho_max = 4.;
+    double rho_max = 20.;
     // make A matrix
     if (eigtest==false){
         makeAmatrix(A,rho_min,rho_max,omega_r,n,coloumb);
@@ -194,7 +194,7 @@ void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb)
     lambda=sort(lambda);
 
     // compare eigenvalues
-    cout.precision(10);
+    cout.precision(5);
     cout<<"Three lowest eigenvalues from armadillo: "<<endl;
     cout<<eigval[0]<<endl;
     cout<<eigval[1]<<endl;
