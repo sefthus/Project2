@@ -140,7 +140,7 @@ void output(double rho_min , double rho_max, double omega_r, mat &R, int n, vec 
 void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb){
 
     double rho_min = 0.;
-    double rho_max = 20.;
+    double rho_max = 4.;
     // make A matrix
     if (eigtest==false){
         makeAmatrix(A,rho_min,rho_max,omega_r,n,coloumb);
@@ -155,11 +155,13 @@ void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb)
     int counter=0;
     int maxcount=n*n*n;
 
+    // find eigenvalues of A using armadillo (timed)
     clock_t start1, finish1;
     start1 = clock();
 
     vec eigval(n);
     eig_sym(eigval,A);
+    eigval =sort(eigval);
 
     finish1=clock();
     double timeused1 = (double)(finish1-start1)/(CLOCKS_PER_SEC);
@@ -167,6 +169,8 @@ void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb)
 
     clock_t start2, finish2;
     start2 = clock();
+
+    // find eigenvalues of A using Jacobi's method (timed)
 
     while (max_offdiag>eps && counter<=maxcount){
         Jacobi_rotate(A,R,k,l,n);
@@ -183,12 +187,15 @@ void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb)
     //cout<<"A matrix: "<<A<<endl;
     cout <<"Number of similarity transformations needed:"<<counter<<endl;
     cout<<maxcount<<endl;
+
     // vector of eigenvalues, sorted
     vec lambda = A.diag();
     int ground_state= lambda.index_min();
     lambda=sort(lambda);
-    eigval =sort(eigval);
-    cout<<"Three lowest known eigenvalues: "<<endl;
+
+    // compare eigenvalues
+    cout.precision(10);
+    cout<<"Three lowest eigenvalues from armadillo: "<<endl;
     cout<<eigval[0]<<endl;
     cout<<eigval[1]<<endl;
     cout<<eigval[2]<<endl;
@@ -196,6 +203,10 @@ void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb)
     cout<<lambda[0]<<endl;
     cout<<lambda[1]<<endl;
     cout<<lambda[2]<<endl;
+    cout<<"Three lowest known eigenvalues: "<<endl;
+    cout<<"find on internet"<<endl;
+    cout<<"something"<<endl;
+    cout<<"something"<<endl;
 
     output(rho_min,rho_max,omega_r,R,n,lambda,ground_state);
 

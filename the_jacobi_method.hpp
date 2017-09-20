@@ -1,6 +1,6 @@
 #ifndef THE_JACOBI_METHOD_HPP
 #define THE_JACOBI_METHOD_HPP
-#include "Armadillo"
+#include "armadillo"
 using namespace arma;
 void testEig();
 void testOffdiag();
