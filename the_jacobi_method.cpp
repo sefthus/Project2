@@ -140,7 +140,7 @@ void output(double rho_min , double rho_max, double omega_r, mat &R, int n, vec 
 void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb){
 
     double rho_min = 0.;
-    double rho_max = 20.;
+    double rho_max = 5.;
     // make A matrix
     if (eigtest==false){
         makeAmatrix(A,rho_min,rho_max,omega_r,n,coloumb);
@@ -204,9 +204,9 @@ void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb)
     cout<<lambda[1]<<endl;
     cout<<lambda[2]<<endl;
     cout<<"Three lowest known eigenvalues: "<<endl;
-    cout<<"find on internet"<<endl;
-    cout<<"something"<<endl;
-    cout<<"something"<<endl;
+    cout<<"3.0000"<<endl;
+    cout<<"7.0000"<<endl;
+    cout<<"11.000"<<endl;
 
     output(rho_min,rho_max,omega_r,R,n,lambda,ground_state);
 
