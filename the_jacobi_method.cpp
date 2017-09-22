@@ -31,7 +31,7 @@ void makeAmatrix(mat &A,double rho_min, double rho_max, double omega_r,int n,int
         if (coloumb==1){
             V(i)= omega_r*omega_r*rho*rho + 1./rho;}
         else{
-            V(i) = rho*rho;}
+            V(i) = omega_r*omega_r*rho*rho;}
 
 
 
@@ -119,7 +119,7 @@ void Jacobi_rotate( mat &A, mat &R, int &k, int &l, int n){
 void output(double rho_min , double rho_max, double omega_r, mat &R, int n, vec &lambda,int ground_state)
 {
     ofstream ofile;
-    ofile.open("schrodinger_sol_omega_25.txt");
+    ofile.open("interacting_5.txt");
     ofile<<setw(15)<<" omega_r" <<setw(15)<<" rho_min "<<setw(15)<<" rho_max "<<setw(20)
         <<" Number of steps "<<setw(15)<<" ground state energy "<<endl;
     ofile<<setw(15) << setprecision(8) << omega_r <<setw(10) << setprecision(8)
@@ -140,7 +140,7 @@ void output(double rho_min , double rho_max, double omega_r, mat &R, int n, vec 
 void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb){
 
     double rho_min = 0.;
-    double rho_max = 5.;
+    double rho_max = 2.;
     // make A matrix
     if (eigtest==false){
         makeAmatrix(A,rho_min,rho_max,omega_r,n,coloumb);
@@ -203,7 +203,7 @@ void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb)
     cout<<lambda[0]<<endl;
     cout<<lambda[1]<<endl;
     cout<<lambda[2]<<endl;
-    cout<<"Three lowest known eigenvalues: "<<endl;
+    cout<<"Three lowest known eigenvalues (non-interacting): "<<endl;
     cout<<"3.0000"<<endl;
     cout<<"7.0000"<<endl;
     cout<<"11.000"<<endl;
