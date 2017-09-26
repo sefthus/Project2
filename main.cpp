@@ -6,7 +6,7 @@ using namespace std;
 
 
 int main(){
-    int n = 150;
+    int n = 200;
 
     // omega value for one non-interacting electron:
     //double omega_r= 1.0;
@@ -16,6 +16,9 @@ int main(){
     //double omega_r= 0.5;
     //double omega_r= 1.0;
     double omega_r= 5.0;
+
+    //test omega to compare with article:
+    //double omega_r= 0.25;
 
     // choose testing or interacting electrons:
     bool eigtest = false;

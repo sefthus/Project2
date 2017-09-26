@@ -119,7 +119,7 @@ void Jacobi_rotate( mat &A, mat &R, int &k, int &l, int n){
 void output(double rho_min , double rho_max, double omega_r, mat &R, int n, vec &lambda,int ground_state)
 {
     ofstream ofile;
-    ofile.open("interacting_5.txt");
+    ofile.open("test.txt");
     ofile<<setw(15)<<" omega_r" <<setw(15)<<" rho_min "<<setw(15)<<" rho_max "<<setw(20)
         <<" Number of steps "<<setw(15)<<" ground state energy "<<endl;
     ofile<<setw(15) << setprecision(8) << omega_r <<setw(10) << setprecision(8)
