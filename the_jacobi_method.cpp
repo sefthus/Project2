@@ -32,19 +32,9 @@ void makeAmatrix(mat &A,double rho_min, double rho_max, double omega_r,int n,int
             V(i)= omega_r*omega_r*rho*rho + 1./rho;}
         else{
             V(i) = omega_r*omega_r*rho*rho;}
-
-
-
-
-       /* //setting diagonal elements
-        A(i,i)=d+V;
-        // setting off diagonal elements
-        if(i<n-1){
-            A(i,i+1)= A(i+1,i)=e;
-        }*/
     }
-    //no if test here
-   A(0,0)= d + V(0);
+
+    A(0,0)= d + V(0);
     A(0,1) = e;
     for (int i=1;i<n-1;i++){
         A(i,i-1) = A(i,i+1) =e;
@@ -140,7 +130,7 @@ void output(double rho_min , double rho_max, double omega_r, mat &R, int n, vec 
 void Jacobi_method(mat &A,mat &R,double omega_r, int n,int eigtest, int coloumb){
 
     double rho_min = 0.;
-    double rho_max = 2.;
+    double rho_max = 5.;
     // make A matrix
     if (eigtest==false){
         makeAmatrix(A,rho_min,rho_max,omega_r,n,coloumb);
